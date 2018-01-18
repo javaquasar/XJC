@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:element name="company">
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:element name="employees" minOccurs="0">
+                    <xsd:complexType mixed="true">
+                        <xsd:sequence>
+                            <xsd:element name="employee" maxOccurs="unbounded">
+                                <xsd:complexType mixed="true">
+                                    <xsd:sequence>
+                                        <xsd:element name="name" minOccurs="0">
+                                            <xsd:complexType mixed="true">
+                                                <xsd:sequence>
+                                                    <xsd:element name="first" minOccurs="0">
+                                                        <xsd:complexType>
+                                                            <xsd:simpleContent>
+                                                                <xsd:extension base="xsd:normalizedString">
+                                                                    <xsd:attribute name="ssn" type="xsd:normalizedString" use="required"/>
+                                                                    <xsd:attribute name="ssn2" type="xsd:normalizedString" use="required"/>
+                                                                    <xsd:attribute name="ssn3" type="xsd:normalizedString" use="required"/>
+                                                                </xsd:extension>
+                                                            </xsd:simpleContent>
+                                                        </xsd:complexType>
+                                                    </xsd:element>
+                                                    <xsd:element name="last" minOccurs="0" type="xsd:normalizedString"/>
+                                                    <xsd:element name="last_test" minOccurs="0">
+                                                        <xsd:complexType>
+                                                            <xsd:simpleContent>
+                                                                <xsd:extension base="xsd:string">
+                                                                    <xsd:attribute name="ssn" type="xsd:int" use="required"/>
+                                                                    <xsd:attribute name="ssn2" type="xsd:decimal" use="required"/>
+                                                                    <xsd:attribute name="ssn3" type="xsd:normalizedString" use="required"/>
+                                                                </xsd:extension>
+                                                            </xsd:simpleContent>
+                                                        </xsd:complexType>
+                                                    </xsd:element>
+                                                </xsd:sequence>
+                                                <xsd:attribute name="ssn" type="xsd:int" use="required"/>
+                                                <xsd:attribute name="ssn2" type="xsd:decimal" use="required"/>
+                                            </xsd:complexType>
+                                        </xsd:element>
+                                        <xsd:element name="office" minOccurs="0" type="xsd:decimal"/>
+                                        <xsd:element name="telephone" minOccurs="0" type="xsd:int"/>
+                                        <xsd:element name="bool" minOccurs="0">
+                                            <xsd:complexType>
+                                                <xsd:simpleContent>
+                                                    <xsd:extension base="xsd:boolean">
+                                                        <xsd:attribute name="ssn" type="xsd:boolean" use="required"/>
+                                                    </xsd:extension>
+                                                </xsd:simpleContent>
+                                            </xsd:complexType>
+                                        </xsd:element>
+                                        <xsd:element name="bool2" minOccurs="0" type="xsd:boolean"/>
+                                    </xsd:sequence>
+                                </xsd:complexType>
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+            <xsd:attribute name="name" type="xsd:string" use="required"/>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>
