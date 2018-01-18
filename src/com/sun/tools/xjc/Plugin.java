@@ -255,6 +255,5 @@ public abstract class Plugin {
      *      error. {@link ErrorHandler} itself may throw it, if it chooses
      *      not to recover from the error.
      */
-    public abstract boolean run(
-        Outline outline, Options opt, ErrorHandler errorHandler ) throws SAXException ;
+    public abstract boolean run(Outline outline, Options opt, ErrorHandler errorHandler) throws SAXException;
 }

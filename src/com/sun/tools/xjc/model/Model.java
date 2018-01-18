@@ -278,7 +278,7 @@ public final class Model implements TypeInfoSet<NType,NClass,Void,Void>, CCustom
      *      Add-ons can use those information to further augment the generated
      *      source code.
      */
-    public Outline generateCode(Options opt,ErrorReceiver receiver) {
+    public Outline generateCode(Options opt, ErrorReceiver receiver) {
         ErrorReceiverFilter ehf = new ErrorReceiverFilter(receiver);
 
         // run extensions // moved to BGMBuilder._build() - issue with hyperjaxb3

@@ -276,7 +276,7 @@ public class Driver {
 
         // display a warning if the user specified the default package
         // this should work, but is generally a bad idea
-        if(opt.defaultPackage != null && opt.defaultPackage.length()==0) {
+        if(opt.defaultPackage != null && opt.defaultPackage.length() == 0) {
             listener.message(Messages.format(Messages.WARNING_MSG, Messages.format(Messages.DEFAULT_PACKAGE_WARNING)));
         }
 
@@ -289,7 +289,7 @@ public class Driver {
         // parse a grammar file
         //-----------------------------------------
         try {
-            if( !opt.quiet ) {
+            if(!opt.quiet) {
                 listener.message(Messages.format(Messages.PARSING_SCHEMA));
             }
 
