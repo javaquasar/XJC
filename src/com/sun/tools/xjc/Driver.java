@@ -83,11 +83,12 @@ public class Driver {
 
     private static final String SYSTEM_PROXY_PROPERTY = "java.net.useSystemProxies";
 
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
         // use the platform default proxy if available.
         // see sun.net.spi.DefaultProxySelector for details.
-        String[] b = {"-d", "./src", "-p", "test.address.pojo", "./resources/example-1.xsd"};
-        args = b;
+        //String[] b = {"-d", "./src", "-p", "test.address.pojo", "./resources/example-1.xsd"};
+        //String[] b = {"-d", "./src", "-p", "test.gps", "./resources/GPS.xsd"};
+        //args = b;
         setupProxies();
 
         if( Util.getSystemProperty(Driver.class,"noThreadSwap")!=null )
@@ -102,7 +103,7 @@ public class Driver {
             @Override
             public void run() {
                 try {
-                    _main(b);
+                    _main(args);
                 } catch( Throwable e ) {
                     ex[0]=e;
                 }

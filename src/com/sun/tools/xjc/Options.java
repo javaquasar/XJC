@@ -371,7 +371,7 @@ public class Options
         if(allPlugins==null) {
             allPlugins = new ArrayList<Plugin>();
             ClassLoader ucl = getUserClassLoader(SecureLoader.getClassClassLoader(getClass()));
-            allPlugins.addAll(Arrays.asList(findServices(Plugin.class,ucl)));
+            allPlugins.addAll(Arrays.asList(findServices(Plugin.class, ucl)));
         }
 
         return allPlugins;
