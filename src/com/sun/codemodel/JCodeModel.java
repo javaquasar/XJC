@@ -270,47 +270,49 @@ public final class JCodeModel {
      * @param   status
      *      if non-null, progress indication will be sent to this stream.
      */
-    public void build( File srcDir, File resourceDir, PrintStream status ) throws IOException {
+    public void build(File srcDir, File resourceDir, PrintStream status) throws IOException {
         CodeWriter src = new FileCodeWriter(srcDir);
         CodeWriter res = new FileCodeWriter(resourceDir);
-        if(status!=null) {
-            src = new ProgressCodeWriter(src, status );
-            res = new ProgressCodeWriter(res, status );
+        if(status != null) {
+            src = new ProgressCodeWriter(src, status);
+            res = new ProgressCodeWriter(res, status);
         }
-        build(src,res);
+        build(src, res);
     }
 
     /**
      * A convenience method for <code>build(destDir,System.out)</code>.
      */
     public void build( File destDir ) throws IOException {
-        build(destDir,System.out);
+        build(destDir, System.out);
     }
 
     /**
      * A convenience method for <code>build(srcDir,resourceDir,System.out)</code>.
      */
-    public void build( File srcDir, File resourceDir ) throws IOException {
-        build(srcDir,resourceDir,System.out);
+    public void build(File srcDir, File resourceDir) throws IOException {
+        build(srcDir, resourceDir, System.out);
     }
 
     /**
      * A convenience method for <code>build(out,out)</code>.
      */
-    public void build( CodeWriter out ) throws IOException {
-        build(out,out);
+    public void build(CodeWriter out) throws IOException {
+        build(out, out);
     }
     
     /**
      * Generates Java source code.
      */
-    public void build( CodeWriter source, CodeWriter resource ) throws IOException {
+    public void build(CodeWriter source, CodeWriter resource) throws IOException {
         JPackage[] pkgs = packages.values().toArray(new JPackage[packages.size()]);
         // avoid concurrent modification exception
-        for( JPackage pkg : pkgs )
-            pkg.build(source,resource);
+        for(JPackage pkg : pkgs) {
+            pkg.build(source, resource);
+        }
         source.close();
         resource.close();
+        System.out.println("JPackage build");
     }
 
     /**

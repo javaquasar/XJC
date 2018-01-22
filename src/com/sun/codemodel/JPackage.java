@@ -76,12 +76,12 @@ public final class JPackage implements JDeclaration, JGenerable, JClassContainer
     /**
      * List of classes contained within this package keyed by their name.
      */
-    private final Map<String,JDefinedClass> classes = new TreeMap<String,JDefinedClass>();
+    private final Map<String, JDefinedClass> classes = new TreeMap<>();
 
     /**
      * List of resources files inside this package.
      */
-    private final Set<JResourceFile> resources = new HashSet<JResourceFile>();
+    private final Set<JResourceFile> resources = new HashSet<>();
     
     /**
      * All {@link JClass}s in this package keyed the upper case class name.
@@ -89,7 +89,7 @@ public final class JPackage implements JDeclaration, JGenerable, JClassContainer
      * This field is non-null only on Windows, to detect
      * "Foo" and "foo" as a collision. 
      */
-    private final Map<String,JDefinedClass> upperCaseClassMap;
+    private final Map<String, JDefinedClass> upperCaseClassMap;
 
     /**
      * Lazily created list of package annotations.
@@ -122,18 +122,20 @@ public final class JPackage implements JDeclaration, JGenerable, JClassContainer
         if(JCodeModel.isCaseSensitiveFileSystem)
             upperCaseClassMap = null;
         else
-            upperCaseClassMap = new HashMap<String,JDefinedClass>();
+            upperCaseClassMap = new HashMap<>();
         
         this.name = name;
     }
 
 
+    @Override
     public JClassContainer parentContainer() {
         return parent();
     }
     
     /**
      * Gets the parent package, or null if this class is the root package.
+     * @return 
      */
     public JPackage parent() {
         if(name.length()==0)    return null;
@@ -142,8 +144,11 @@ public final class JPackage implements JDeclaration, JGenerable, JClassContainer
         return owner._package(name.substring(0,idx));
     }
 
+    @Override
     public boolean isClass() { return false; }
+    @Override
     public boolean isPackage() { return true; }
+    @Override
     public JPackage getPackage() { return this; }
     
     /**
@@ -160,6 +165,7 @@ public final class JPackage implements JDeclaration, JGenerable, JClassContainer
      * @exception JClassAlreadyExistsException
      *      When the specified class/interface was already created.
      */
+    @Override
     public JDefinedClass _class(int mods, String name) throws JClassAlreadyExistsException {
         return _class(mods,name,ClassType.CLASS);
     }
@@ -168,21 +174,24 @@ public final class JPackage implements JDeclaration, JGenerable, JClassContainer
      * {@inheritDoc}
      * @deprecated
      */
+    @Override
     public JDefinedClass _class( int mods, String name, boolean isInterface ) throws JClassAlreadyExistsException {
     	return _class(mods,name, isInterface?ClassType.INTERFACE:ClassType.CLASS );
     }
     
+    @Override
     public JDefinedClass _class( int mods, String name, ClassType classTypeVal ) throws JClassAlreadyExistsException {
-        if(classes.containsKey(name))
+        if(classes.containsKey(name)) {
             throw new JClassAlreadyExistsException(classes.get(name));
-        else {
+        } else {
             // XXX problems caught in the NC constructor
             JDefinedClass c = new JDefinedClass(this, mods, name, classTypeVal);
             
             if( upperCaseClassMap!=null ) {
                 JDefinedClass dc = upperCaseClassMap.get(name.toUpperCase());
-                if(dc!=null)
+                if(dc != null) {
                     throw new JClassAlreadyExistsException(dc);
+                }
                 upperCaseClassMap.put(name.toUpperCase(),c);
             }            
             classes.put(name,c);
@@ -190,12 +199,13 @@ public final class JPackage implements JDeclaration, JGenerable, JClassContainer
         }
     }
 
-	/**
-	 * Adds a public class to this package.
-	 */
+    /**
+     * Adds a public class to this package.
+     */
+    @Override
     public JDefinedClass _class(String name) throws JClassAlreadyExistsException {
-		return _class( JMod.PUBLIC, name );
-	}
+        return _class(JMod.PUBLIC, name);
+    }
 
     /**
      * Gets a reference to the already created {@link JDefinedClass}.
@@ -204,10 +214,11 @@ public final class JPackage implements JDeclaration, JGenerable, JClassContainer
      *      If the class is not yet created.
      */
     public JDefinedClass _getClass(String name) {
-        if(classes.containsKey(name))
+        if(classes.containsKey(name)) {
             return classes.get(name);
-        else
+        } else {
             return null;
+        }
     }
 
     /**
@@ -278,9 +289,11 @@ public final class JPackage implements JDeclaration, JGenerable, JClassContainer
      * Checks if a resource of the given name exists.
      */
     public boolean hasResourceFile(String name) {
-        for (JResourceFile r : resources)
-            if (r.name().equals(name))
+        for (JResourceFile r : resources) {
+            if (r.name().equals(name)) {
                 return true;
+            }
+        }
         return false;
     }
     
@@ -298,8 +311,9 @@ public final class JPackage implements JDeclaration, JGenerable, JClassContainer
      * @return JDocComment containing javadocs for this class
      */
     public JDocComment javadoc() {
-        if (jdoc == null)
+        if (jdoc == null) {
             jdoc = new JDocComment(owner());
+        }
         return jdoc;
     }
 
@@ -307,15 +321,16 @@ public final class JPackage implements JDeclaration, JGenerable, JClassContainer
      * Removes a class from this package.
      */
     public void remove(JClass c) {
-        if (c._package() != this)
-            throw new IllegalArgumentException(
-                "the specified class is not a member of this package," + " or it is a referenced class");
+        if (c._package() != this) {
+            throw new IllegalArgumentException("the specified class is not a member of this package," + " or it is a referenced class");
+        }
 
         // note that c may not be a member of classes.
         // this happens when someone is trying to remove a non generated class
         classes.remove(c.name());
-        if (upperCaseClassMap != null)
+        if (upperCaseClassMap != null) {
             upperCaseClassMap.remove(c.name().toUpperCase());
+        }
     }
 	
     /**
@@ -431,34 +446,41 @@ public final class JPackage implements JDeclaration, JGenerable, JClassContainer
     }
 
 
-    void build( CodeWriter src, CodeWriter res ) throws IOException {
-
+    void build(CodeWriter src, CodeWriter res) throws IOException {
+        System.out.println("----------phase 0");
         // write classes
         for (JDefinedClass c : classes.values()) {
-            if (c.isHidden())
+            if (c.isHidden()) {
                 continue;   // don't generate this file
-
+            }
+            if("ABAccount".equals(c.name())) {
+                System.out.println("ABAccount"); 
+            }
             JFormatter f = createJavaSourceFileWriter(src, c.name());
             f.write(c);
             f.close();
         }
+        
+        System.out.println("----------phase 1");
 
         // write package annotations
-        if(annotations!=null || jdoc!=null) {
-            JFormatter f = createJavaSourceFileWriter(src,"package-info");
+        if(annotations != null || jdoc != null) {
+            JFormatter f = createJavaSourceFileWriter(src, "package-info");
 
-            if (jdoc != null)
+            if (jdoc != null) {
                 f.g(jdoc);
-
+            }
+            
             // TODO: think about importing
-            if (annotations != null){
-                for (JAnnotationUse a : annotations)
+            if (annotations != null) {
+                for (JAnnotationUse a : annotations) {
                     f.g(a).nl();
+                }
             }
             f.d(this);
-
             f.close();
         }
+        System.out.println("----------phase 2");
 
         // write resources
         for (JResourceFile rsrc : resources) {
@@ -467,6 +489,7 @@ public final class JPackage implements JDeclaration, JGenerable, JClassContainer
             rsrc.build(os);
             os.close();
         }
+        System.out.println("----------phase 3");
     }
 
     /*package*/ int countArtifacts() {
@@ -487,7 +510,7 @@ public final class JPackage implements JDeclaration, JGenerable, JClassContainer
     }
 
     private JFormatter createJavaSourceFileWriter(CodeWriter src, String className) throws IOException {
-        Writer bw = new BufferedWriter(src.openSource(this,className+".java"));
+        Writer bw = new BufferedWriter(src.openSource(this, className + ".java"));
         return new JFormatter(new PrintWriter(bw));
     }
 }

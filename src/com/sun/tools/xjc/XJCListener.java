@@ -107,7 +107,9 @@ public abstract class XJCListener implements ErrorListener {
      * @param outline
      *      never null. this is the root object that represents the code generation strategy.
      */
-    public void compiled(Outline outline) {}
+    public void compiled(Outline outline) {
+        System.out.println("compiled");
+    }
 
     /**
      * XJC will periodically invoke this method to see if it should cancel a compilation.
