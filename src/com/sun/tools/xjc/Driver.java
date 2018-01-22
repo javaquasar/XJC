@@ -144,7 +144,7 @@ public class Driver {
 
     private static void _main( String[] args ) throws Exception {
         try {
-            System.exit(run( args, System.out, System.out ));
+            System.exit(run(args, System.out, System.out));
         } catch (BadCommandLineException e) {
             // there was an error in the command line.
             // print usage and abort.
@@ -192,7 +192,7 @@ public class Driver {
         throws Exception {
 
         class Listener extends XJCListener {
-            ConsoleErrorReporter cer = new ConsoleErrorReporter(out==null?new PrintStream(new NullStream()):out);
+            ConsoleErrorReporter cer = new ConsoleErrorReporter(out == null ? new PrintStream(new NullStream()) : out);
 
             @Override
             public void generatedFile(String fileName, int count, int total) {
@@ -200,8 +200,9 @@ public class Driver {
             }
             @Override
             public void message(String msg) {
-                if(status!=null)
+                if(status != null) {
                     status.println(msg);
+                }
             }
 
             public void error(SAXParseException exception) {
@@ -221,7 +222,7 @@ public class Driver {
             }
         }
 
-        return run(args,new Listener());
+        return run(args, new Listener());
     }
 
     /**
@@ -315,7 +316,7 @@ public class Driver {
                 }
             };
 
-            if( opt.mode==Mode.FOREST ) {
+            if(opt.mode == Mode.FOREST) {
                 // dump DOM forest and quit
                 ModelLoader loader  = new ModelLoader( opt, new JCodeModel(), receiver );
                 try {
@@ -331,7 +332,7 @@ public class Driver {
                 return -1;
             }
 
-            if( opt.mode==Mode.GBIND ) {
+            if(opt.mode == Mode.GBIND) {
                 try {
                     XSSchemaSet xss = new ModelLoader(opt, new JCodeModel(), receiver).loadXMLSchema();
                     Iterator<XSComplexType> it = xss.iterateComplexTypes();
@@ -361,7 +362,7 @@ public class Driver {
                 return -1;
             }
 
-            if( !opt.quiet ) {
+            if(!opt.quiet) {
                 listener.message(Messages.format(Messages.COMPILING_SCHEMA));
             }
 
@@ -384,7 +385,7 @@ public class Driver {
                     // generate actual code
                     receiver.debug("generating code");
                     {// don't want to hold outline in memory for too long.
-                        Outline outline = model.generateCode(opt,receiver);
+                        Outline outline = model.generateCode(opt, receiver);
                         if(outline==null) {
                             listener.message(
                                 Messages.format(Messages.FAILED_TO_GENERATE_CODE));
@@ -400,19 +401,20 @@ public class Driver {
                     // then print them out
                     try {
                         CodeWriter cw;
-                        if( opt.mode==Mode.ZIP ) {
+                        if(opt.mode == Mode.ZIP) {
                             OutputStream os;
-                            if(opt.targetDir.getPath().equals("."))
+                            if(opt.targetDir.getPath().equals(".")) {
                                 os = System.out;
-                            else
+                            } else {
                                 os = new FileOutputStream(opt.targetDir);
-
+                            }        
                             cw = opt.createCodeWriter(new ZipCodeWriter(os));
-                        } else
+                        } else {
                             cw = opt.createCodeWriter();
-
-                        if( !opt.quiet ) {
-                            cw = new ProgressCodeWriter(cw,listener, model.codeModel.countArtifacts());
+                        }
+                        
+                        if(!opt.quiet) {
+                            cw = new ProgressCodeWriter(cw, listener, model.codeModel.countArtifacts());
                         }
                         model.codeModel.build(cw);
                     } catch (IOException e) {

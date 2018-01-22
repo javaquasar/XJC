@@ -288,8 +288,8 @@ public final class Model implements TypeInfoSet<NType,NClass,Void,Void>, CCustom
         Outline o = BeanGenerator.generate(this, ehf);
 
         try {// run extensions
-            for( Plugin ma : opt.activePlugins )
-                ma.run(o,opt,ehf);
+            for(Plugin ma : opt.activePlugins)
+                ma.run(o, opt, ehf);
         } catch (SAXException e) {
             // fatal error. error should have been reported
             return null;
@@ -299,7 +299,7 @@ public final class Model implements TypeInfoSet<NType,NClass,Void,Void>, CCustom
         // these can be only checked after the plug-ins run, so it's here.
         // the JAXB bindings are checked by XMLSchema's builder.
         Set<CCustomizations> check = new HashSet<CCustomizations>();
-        for( CCustomizations c=customizations; c!=null; c=c.next ) {
+        for(CCustomizations c = customizations; c != null; c = c.next) {
             if(!check.add(c)) {
                 throw new AssertionError(); // detect a loop
             }

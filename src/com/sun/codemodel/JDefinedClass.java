@@ -81,7 +81,7 @@ public class JDefinedClass
     private final Set<JClass> interfaces = new TreeSet<JClass>();
 
     /** Fields keyed by their names. */
-    /*package*/ final Map<String,JFieldVar> fields = new LinkedHashMap<String,JFieldVar>();
+    /*package*/ final Map<String, JFieldVar> fields = new LinkedHashMap<>();
 
     /** Static initializer, if this class has one */
     private JBlock init = null;
@@ -93,10 +93,10 @@ public class JDefinedClass
     private JDocComment jdoc = null;
 
     /** Set of constructors for this class, if any */
-    private final List<JMethod> constructors = new ArrayList<JMethod>();
+    private final List<JMethod> constructors = new ArrayList<>();
 
     /** Set of methods that are members of this class */
-    private final List<JMethod> methods = new ArrayList<JMethod>();
+    private final List<JMethod> methods = new ArrayList<>();
 
     /**
      * Nested classes as a map from name to JDefinedClass.
@@ -155,7 +155,7 @@ public class JDefinedClass
      * In Java, enum constant order is actually significant,
      * because of order ID they get. So let's preserve the order.
      */
-    private final Map<String,JEnumConstant> enumConstantsByName = new LinkedHashMap<String,JEnumConstant>();
+    private final Map<String, JEnumConstant> enumConstantsByName = new LinkedHashMap<String,JEnumConstant>();
 
     /**
      * Annotations on this variable. Lazily created.

@@ -369,7 +369,7 @@ public class Options
      */
     public List<Plugin> getAllPlugins() {
         if(allPlugins==null) {
-            allPlugins = new ArrayList<Plugin>();
+            allPlugins = new ArrayList<>();
             ClassLoader ucl = getUserClassLoader(SecureLoader.getClassClassLoader(getClass()));
             allPlugins.addAll(Arrays.asList(findServices(Plugin.class, ucl)));
         }
@@ -953,13 +953,14 @@ public class Options
         // so that we can take advantage of JSR-277 module system.
         try {
             Class<?> serviceLoader = Class.forName("java.util.ServiceLoader");
-            if(debug)
+            if(debug) {
                 System.out.println("Using java.util.ServiceLoader");
-            Iterable<T> itr = (Iterable<T>)serviceLoader.getMethod("load",Class.class,ClassLoader.class).invoke(null,clazz,classLoader);
+            }
+            Iterable<T> itr = (Iterable<T>) serviceLoader.getMethod("load", Class.class, ClassLoader.class).invoke(null, clazz, classLoader);
             List<T> r = new ArrayList<T>();
             for (T t : itr)
                 r.add(t);
-            return r.toArray((T[])Array.newInstance(clazz,r.size()));
+            return r.toArray((T[])Array.newInstance(clazz, r.size()));
         } catch (ClassNotFoundException e) {
             // fall through
         } catch (IllegalAccessException e) {

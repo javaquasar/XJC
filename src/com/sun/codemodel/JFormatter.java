@@ -215,11 +215,13 @@ public final class JFormatter {
 
     private void spaceIfNeeded(char c) {
         if (atBeginningOfLine) {
-            for (int i = 0; i < indentLevel; i++)
+            for (int i = 0; i < indentLevel; i++) {
                 pw.print(indentSpace);
+            }
             atBeginningOfLine = false;
-        } else if ((lastChar != 0) && needSpace(lastChar, c))
+        } else if ((lastChar != 0) && needSpace(lastChar, c)) {
             pw.print(' ');
+        }
     }
 
     /**
@@ -228,8 +230,8 @@ public final class JFormatter {
      * @param c the char
      */
     public JFormatter p(char c) {
-        if(mode==Mode.PRINTING) {
-            if(c==CLOSE_TYPE_ARGS) {
+        if(mode == Mode.PRINTING) {
+            if(c == CLOSE_TYPE_ARGS) {
                 pw.print('>');
             } else {
                 spaceIfNeeded(c);
@@ -246,7 +248,7 @@ public final class JFormatter {
      * @param s the String
      */
     public JFormatter p(String s) {
-        if(mode==Mode.PRINTING) {
+        if(mode == Mode.PRINTING) {
             spaceIfNeeded(s.charAt(0));
             pw.print(s);
             lastChar = s.charAt(s.length() - 1);
@@ -308,9 +310,9 @@ public final class JFormatter {
         case COLLECTING:
             // see if there is a type name that collides with this id
             if(collectedReferences.containsKey(id)) {
-                if( !collectedReferences.get(id).getClasses().isEmpty() ) {
-                    for( JClass type : collectedReferences.get(id).getClasses() ) {
-                        if (type.outer()!=null) {
+                if(!collectedReferences.get(id).getClasses().isEmpty()) {
+                    for(JClass type : collectedReferences.get(id).getClasses()) {
+                        if (type.outer() != null) {
                             collectedReferences.get(id).setId(false);
                             return this;
                         }
@@ -333,7 +335,7 @@ public final class JFormatter {
      * Print a new line into the stream
      */
     public JFormatter nl() {
-        if(mode==Mode.PRINTING) {
+        if(mode == Mode.PRINTING) {
             pw.println();
             lastChar = 0;
             atBeginningOfLine = true;
@@ -358,8 +360,9 @@ public final class JFormatter {
         boolean first = true;
         if(!list.isEmpty()) {
             for (JGenerable item : list) {
-                if (!first)
+                if (!first) {
                     p(',');
+                }
                 g(item);
                 first = false;
             }
@@ -408,7 +411,7 @@ public final class JFormatter {
         javaLang = c.owner()._package("java.lang");
 
         // collate type names and identifiers to determine which types can be imported
-        for( ReferenceList tl : collectedReferences.values() ) {
+        for(ReferenceList tl : collectedReferences.values()) {
             if(!tl.collisions(c) && !tl.isId()) {
                 assert tl.getClasses().size() == 1;
 
@@ -516,18 +519,20 @@ public final class JFormatter {
             // special case where a generated type collides with a type in package java
 
             // more than one type with the same name
-            if(classes.size() > 1)
+            if(classes.size() > 1) {
                 return true;
+            }
 
             // an id and (at least one) type with the same name
-            if(id && classes.size() != 0)
+            if(id && classes.size() != 0) {
                 return true;
-
+            }
+            
             for(JClass c : classes) {
                 if (c instanceof JAnonymousClass) {
                     c = c._extends();
                 } 
-                if(c._package()==javaLang) {
+                if(c._package() == javaLang) {
                     // make sure that there's no other class with this name within the same package
                     Iterator<JDefinedClass> itr = enclosingClass._package().classes();
                     while(itr.hasNext()) {
@@ -535,12 +540,14 @@ public final class JFormatter {
                         // if the class called "String" is in the same package,
                         // we still need to import it.
                         JDefinedClass n = itr.next();
-                        if(n.name().equals(c.name()))
+                        if(n.name().equals(c.name())) {
                             return true;    //collision
+                        }
                     }
                 }
-                if(c.outer()!=null)
+                if(c.outer() != null) {
                     return true; // avoid importing inner class to work around 6431987. Also see jaxb issue 166
+                }
             }
 
             return false;

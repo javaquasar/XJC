@@ -167,11 +167,11 @@ public final class ModelLoader {
                 break;
 
             case WSDL:
-                grammar = annotateXMLSchema( loadWSDL() );
+                grammar = annotateXMLSchema(loadWSDL());
                 break;
 
             case XMLSCHEMA:
-                grammar = annotateXMLSchema( loadXMLSchema() );
+                grammar = annotateXMLSchema(loadXMLSchema());
                 break;
 
             default :
