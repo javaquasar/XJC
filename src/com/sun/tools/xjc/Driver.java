@@ -386,9 +386,8 @@ public class Driver {
                     receiver.debug("generating code");
                     {// don't want to hold outline in memory for too long.
                         Outline outline = model.generateCode(opt, receiver);
-                        if(outline==null) {
-                            listener.message(
-                                Messages.format(Messages.FAILED_TO_GENERATE_CODE));
+                        if(outline == null) {
+                            listener.message( Messages.format(Messages.FAILED_TO_GENERATE_CODE));
                             return -1;
                         }
 

@@ -70,14 +70,15 @@ public class XJCFacade {
             }
         }
 
-        ClassLoader oldContextCl = SecureLoader.getContextClassLoader();
+        //ClassLoader oldContextCl = SecureLoader.getContextClassLoader();
         try {
-            ClassLoader cl = ClassLoaderBuilder.createProtectiveClassLoader(SecureLoader.getClassClassLoader(XJCFacade.class), v);
-            SecureLoader.setContextClassLoader(cl);
-            Class<?> driver = cl.loadClass("com.sun.tools.xjc.Driver");
-            Method mainMethod = driver.getDeclaredMethod("main", new Class[]{String[].class});
+            //ClassLoader cl = ClassLoaderBuilder.createProtectiveClassLoader(SecureLoader.getClassClassLoader(XJCFacade.class), v);
+            //SecureLoader.setContextClassLoader(cl);
+            //Class<?> driver = cl.loadClass("com.sun.tools.xjc.Driver");
+            //Method mainMethod = driver.getDeclaredMethod("main", new Class[]{String[].class});
             try {
-                mainMethod.invoke(null, new Object[]{args});
+                //mainMethod.invoke(null, new Object[]{args});
+                Driver.main(args);
             } catch (InvocationTargetException e) {
                 if (e.getTargetException() != null) {
                     throw e.getTargetException();
@@ -86,30 +87,30 @@ public class XJCFacade {
         } catch (UnsupportedClassVersionError e) {
             System.err.println(JDK6_REQUIRED);
         } finally {
-            ClassLoader cl = SecureLoader.getContextClassLoader();
-            SecureLoader.setContextClassLoader(oldContextCl);
-
-            //close/cleanup all classLoaders but the one which loaded this class
-            while (cl != null && !oldContextCl.equals(cl)) {
-                if (cl instanceof Closeable) {
-                    //JDK7+, ParallelWorldClassLoader
-                    ((Closeable) cl).close();
-                } else {
-                    if (cl instanceof URLClassLoader) {
-                        //JDK6 - API jars are loaded by instance of URLClassLoader
-                        //so use proprietary API to release holded resources
-                        try {
-                            Class<?> clUtil = oldContextCl.loadClass("sun.misc.ClassLoaderUtil");
-                            Method release = clUtil.getDeclaredMethod("releaseLoader", URLClassLoader.class);
-                            release.invoke(null, cl);
-                        } catch (ClassNotFoundException ex) {
-                            //not Sun JDK 6, ignore
-                            System.err.println(JDK6_REQUIRED);
-                        }
-                    }
-                }
-                cl = SecureLoader.getParentClassLoader(cl);
-            }
+//            ClassLoader cl = SecureLoader.getContextClassLoader();
+//            SecureLoader.setContextClassLoader(oldContextCl);
+//
+//            //close/cleanup all classLoaders but the one which loaded this class
+//            while (cl != null && !oldContextCl.equals(cl)) {
+//                if (cl instanceof Closeable) {
+//                    //JDK7+, ParallelWorldClassLoader
+//                    ((Closeable) cl).close();
+//                } else {
+//                    if (cl instanceof URLClassLoader) {
+//                        //JDK6 - API jars are loaded by instance of URLClassLoader
+//                        //so use proprietary API to release holded resources
+//                        try {
+//                            Class<?> clUtil = oldContextCl.loadClass("sun.misc.ClassLoaderUtil");
+//                            Method release = clUtil.getDeclaredMethod("releaseLoader", URLClassLoader.class);
+//                            release.invoke(null, cl);
+//                        } catch (ClassNotFoundException ex) {
+//                            //not Sun JDK 6, ignore
+//                            System.err.println(JDK6_REQUIRED);
+//                        }
+//                    }
+//                }
+//                cl = SecureLoader.getParentClassLoader(cl);
+//            }
         }
     }
 

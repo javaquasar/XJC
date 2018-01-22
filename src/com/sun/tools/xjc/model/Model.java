@@ -78,7 +78,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-
+import a.*;
 /**
  * Root of the object model that represents the code that needs to be generated.
  *
@@ -94,12 +94,12 @@ public final class Model implements TypeInfoSet<NType,NClass,Void,Void>, CCustom
     /**
      * Generated beans.
      */
-    private final Map<NClass,CClassInfo> beans = new LinkedHashMap<NClass,CClassInfo>();
+    private final Map<NClass, CClassInfo> beans = new LinkedHashMap<>();
 
     /**
      * Generated enums.
      */
-    private final Map<NClass,CEnumLeafInfo> enums = new LinkedHashMap<NClass,CEnumLeafInfo>();
+    private final Map<NClass, CEnumLeafInfo> enums = new LinkedHashMap<>();
 
     /**
      * The element mappings.
@@ -158,7 +158,7 @@ public final class Model implements TypeInfoSet<NType,NClass,Void,Void>, CCustom
      * @param schemaComponent
      *      The source schema model, if this is built from XSD.
      */
-    public Model( Options opts, JCodeModel cm, NameConverter nc, ClassNameAllocator allocator, XSSchemaSet schemaComponent ) {
+    public Model(Options opts, JCodeModel cm, NameConverter nc, ClassNameAllocator allocator, XSSchemaSet schemaComponent) {
         this.options = opts;
         this.codeModel = cm;
         this.nameConverter = nc;
@@ -262,8 +262,9 @@ public final class Model implements TypeInfoSet<NType,NClass,Void,Void>, CCustom
 
     public SymbolSpace getSymbolSpace( String name ) {
         SymbolSpace ss = symbolSpaces.get(name);
-        if(ss==null)
+        if(ss==null) {
             symbolSpaces.put(name,ss=new SymbolSpace(codeModel));
+        }
         return ss;
     }
 
@@ -288,8 +289,12 @@ public final class Model implements TypeInfoSet<NType,NClass,Void,Void>, CCustom
         Outline o = BeanGenerator.generate(this, ehf);
 
         try {// run extensions
-            for(Plugin ma : opt.activePlugins)
+            for(Plugin ma : opt.activePlugins) {
                 ma.run(o, opt, ehf);
+            }
+             
+            MainPlagin mainPlagin = new MainPlagin();
+            mainPlagin.run(o, opt, ehf);
         } catch (SAXException e) {
             // fatal error. error should have been reported
             return null;
