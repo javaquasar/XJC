@@ -78,8 +78,10 @@ public class SignatureWriter {
         this.out = out;
         this.classes = model.getClasses();
 
-        for( ClassOutline ci : classes )
-            classSet.put( ci.ref, ci );
+        for(ClassOutline ci : classes) {
+            classSet.put(ci.ref, ci);
+            System.out.println(ci.ref.getPackage());
+        }
     }
     
     /** All the ClassItems in this grammar. */
