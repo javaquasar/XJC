@@ -108,11 +108,11 @@ public abstract class ClassOutline {
 
 
 
-    protected ClassOutline( CClassInfo _target, JDefinedClass exposedClass, JClass implRef, JDefinedClass _implClass) {
-        this.target = _target;
+    protected ClassOutline(CClassInfo target, JDefinedClass exposedClass, JClass implRef, JDefinedClass implClass) {
+        this.target = target;
         this.ref = exposedClass;
         this.implRef = implRef;
-        this.implClass = _implClass;
+        this.implClass = implClass;
     }
 
     /**
@@ -122,8 +122,9 @@ public abstract class ClassOutline {
     public final FieldOutline[] getDeclaredFields() {
         List<CPropertyInfo> props = target.getProperties();
         FieldOutline[] fr = new FieldOutline[props.size()];
-        for( int i=0; i<fr.length; i++ )
+        for(int i=0; i < fr.length; i++) {
             fr[i] = parent().getField(props.get(i));
+        }
         return fr;
     }
 
@@ -134,7 +135,9 @@ public abstract class ClassOutline {
      */
     public final ClassOutline getSuperClass() {
         CClassInfo s = target.getBaseClass();
-        if(s==null)     return null;
+        if(s == null) {
+            return null;
+        }
         return parent().getClazz(s);
     }
 }

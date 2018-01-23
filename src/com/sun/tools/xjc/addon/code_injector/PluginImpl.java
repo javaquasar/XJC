@@ -78,10 +78,11 @@ public class PluginImpl extends Plugin {
 
     // meat of the processing
     public boolean run(Outline model, Options opt, ErrorHandler errorHandler) {
-        for( ClassOutline co : model.getClasses() ) {
-            CPluginCustomization c = co.target.getCustomizations().find(Const.NS,"code");
-            if(c==null)
+        for(ClassOutline co : model.getClasses()) {
+            CPluginCustomization c = co.target.getCustomizations().find(Const.NS, "code");
+            if(c == null) {
                 continue;   // no customization --- nothing to inject here
+            }
 
             c.markAsAcknowledged();
             // TODO: ideally you should validate this DOM element to make sure

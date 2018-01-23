@@ -128,26 +128,26 @@ public final class BeanGenerator implements Outline {
     private final CodeModelClassFactory codeModelClassFactory;
     private final ErrorReceiver errorReceiver;
     /** all {@link PackageOutline}s keyed by their {@link PackageOutline#_package}. */
-    private final Map<JPackage, PackageOutlineImpl> packageContexts = new LinkedHashMap<JPackage, PackageOutlineImpl>();
+    private final Map<JPackage, PackageOutlineImpl> packageContexts = new LinkedHashMap<>();
     /** all {@link ClassOutline}s keyed by their {@link ClassOutline#target}. */
-    private final Map<CClassInfo, ClassOutlineImpl> classes = new LinkedHashMap<CClassInfo, ClassOutlineImpl>();
+    private final Map<CClassInfo, ClassOutlineImpl> classes = new LinkedHashMap<>();
     /** all {@link EnumOutline}s keyed by their {@link EnumOutline#target}. */
-    private final Map<CEnumLeafInfo, EnumOutline> enums = new LinkedHashMap<CEnumLeafInfo, EnumOutline>();
+    private final Map<CEnumLeafInfo, EnumOutline> enums = new LinkedHashMap<>();
     /**
      * Generated runtime classes.
      */
-    private final Map<Class, JClass> generatedRuntime = new LinkedHashMap<Class, JClass>();
+    private final Map<Class, JClass> generatedRuntime = new LinkedHashMap<>();
     /** the model object which we are processing. */
     private final Model model;
     private final JCodeModel codeModel;
     /**
      * for each property, the information about the generated field.
      */
-    private final Map<CPropertyInfo, FieldOutline> fields = new LinkedHashMap<CPropertyInfo, FieldOutline>();
+    private final Map<CPropertyInfo, FieldOutline> fields = new LinkedHashMap<>();
     /**
      * elements that generate classes to the generated classes.
      */
-    /*package*/ final Map<CElementInfo, ElementOutlineImpl> elements = new LinkedHashMap<CElementInfo, ElementOutlineImpl>();
+    /*package*/ final Map<CElementInfo, ElementOutlineImpl> elements = new LinkedHashMap<>();
 
     /**
      * Generates beans into code model according to the BGM,

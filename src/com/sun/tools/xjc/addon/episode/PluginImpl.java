@@ -94,19 +94,23 @@ import java.util.Set;
  */
 public class PluginImpl extends Plugin {
 
-    private File episodeFile;
+    private File episodeFile = new File("./resources/episode");;
 
+    @Override
     public String getOptionName() {
         return "episode";
     }
 
+    @Override
     public String getUsage() {
         return "  -episode <FILE>    :  generate the episode file for separate compilation";
     }
 
+    @Override
     public int parseArgument(Options opt, String[] args, int i) throws BadCommandLineException, IOException {
+        System.out.println("args[i].equals(-episode)" + args[i].equals("-episode"));
         if(args[i].equals("-episode")) {
-            episodeFile = new File(opt.requireArgument("-episode",args,++i));
+            //episodeFile = new File(opt.requireArgument("-episode", args, ++i));
             return 2;
         }
         return 0;
@@ -116,22 +120,22 @@ public class PluginImpl extends Plugin {
      * Capture all the generated classes from global schema components
      * and generate them in an episode file.
      */
+    @Override
     public boolean run(Outline model, Options opt, ErrorHandler errorHandler) throws SAXException {
         try {
             // reorganize qualifying components by their namespaces to
             // generate the list nicely
-            Map<XSSchema, PerSchemaOutlineAdaptors> perSchema = new LinkedHashMap<XSSchema, PerSchemaOutlineAdaptors>();
+            Map<XSSchema, PerSchemaOutlineAdaptors> perSchema = new LinkedHashMap<>();
             boolean hasComponentInNoNamespace = false;
 
             // Combine classes and enums into a single list
-            List<OutlineAdaptor> outlines = new ArrayList<OutlineAdaptor>();
+            List<OutlineAdaptor> outlines = new ArrayList<>();
 
             for (ClassOutline co : model.getClasses()) {
                 XSComponent sc = co.target.getSchemaComponent();
                 String fullName = co.implClass.fullName();
                 String packageName = co.implClass.getPackage().name();
-                OutlineAdaptor adaptor = new OutlineAdaptor(sc,
-                        OutlineAdaptor.OutlineType.CLASS, fullName, packageName);
+                OutlineAdaptor adaptor = new OutlineAdaptor(sc, OutlineAdaptor.OutlineType.CLASS, fullName, packageName);
                 outlines.add(adaptor);
             }
 
@@ -139,20 +143,23 @@ public class PluginImpl extends Plugin {
                 XSComponent sc = eo.target.getSchemaComponent();
                 String fullName = eo.clazz.fullName();
                 String packageName = eo.clazz.getPackage().name();
-                OutlineAdaptor adaptor = new OutlineAdaptor(sc,
-                        OutlineAdaptor.OutlineType.ENUM, fullName, packageName);
+                OutlineAdaptor adaptor = new OutlineAdaptor(sc, OutlineAdaptor.OutlineType.ENUM, fullName, packageName);
                 outlines.add(adaptor);
             }
 
             for (OutlineAdaptor oa : outlines) {
                 XSComponent sc = oa.schemaComponent;
 
-                if (sc == null) continue;
-                if (!(sc instanceof XSDeclaration))
+                if (sc == null) {
                     continue;
+                }
+                if (!(sc instanceof XSDeclaration)) {
+                    continue;
+                }
                 XSDeclaration decl = (XSDeclaration) sc;
-                if (decl.isLocal())
+                if (decl.isLocal()) {
                     continue;   // local components cannot be referenced from outside, so no need to list.
+                }
 
                 PerSchemaOutlineAdaptors list = perSchema.get(decl.getOwnerSchema());
                 if (list == null) {
@@ -162,16 +169,19 @@ public class PluginImpl extends Plugin {
 
                 list.add(oa);
 
-                if (decl.getTargetNamespace().equals(""))
+                if (decl.getTargetNamespace().equals("")) {
                     hasComponentInNoNamespace = true;
+                }
             }
 
+            System.out.println("episodeFile.exists() = " + episodeFile.exists());
             OutputStream os = new FileOutputStream(episodeFile);
             Bindings bindings = TXW.create(Bindings.class, new StreamSerializer(os, "UTF-8"));
-            if(hasComponentInNoNamespace) // otherwise jaxb binding NS should be the default namespace
-                bindings._namespace(Const.JAXB_NSURI,"jaxb");
-            else
-                bindings._namespace(Const.JAXB_NSURI,"");
+            if(hasComponentInNoNamespace) {// otherwise jaxb binding NS should be the default namespace
+                bindings._namespace(Const.JAXB_NSURI, "jaxb");
+            } else {
+                bindings._namespace(Const.JAXB_NSURI, "");
+            }
             bindings.version("2.1");
             bindings._comment("\n\n"+opt.getPrologComment()+"\n  ");
 
@@ -180,20 +190,21 @@ public class PluginImpl extends Plugin {
             	PerSchemaOutlineAdaptors ps = e.getValue();
                 Bindings group = bindings.bindings();
                 String tns = e.getKey().getTargetNamespace();
-                if(!tns.equals(""))
-                    group._namespace(tns,"tns");
+                if(!tns.equals("")) {
+                    group._namespace(tns, "tns");
+                }
 
-                group.scd("x-schema::"+(tns.equals("")?"":"tns"));
+                group.scd("x-schema::" + (tns.equals("") ? "" : "tns"));
                 SchemaBindings schemaBindings = group.schemaBindings();
-				schemaBindings.map(false);
+		schemaBindings.map(false);
                 if (ps.packageNames.size() == 1) {
                     final String packageName = ps.packageNames.iterator().next();
                     if (packageName != null && packageName.length() > 0) {
-						schemaBindings._package().name(packageName);
-					}
-				}
+                        schemaBindings._package().name(packageName);
+                    }
+                }
 
-				for (OutlineAdaptor oa : ps.outlineAdaptors) {
+		for (OutlineAdaptor oa : ps.outlineAdaptors) {
                     Bindings child = group.bindings();
                     oa.buildBindings(child);
                 }
@@ -215,77 +226,95 @@ public class PluginImpl extends Plugin {
      */
     private static final XSFunction<String> SCD = new XSFunction<String>() {
         private String name(XSDeclaration decl) {
-            if(decl.getTargetNamespace().equals(""))
+            if(decl.getTargetNamespace().equals("")) {
                 return decl.getName();
-            else
-                return "tns:"+decl.getName();
+            } else {
+                return "tns:" + decl.getName();
+            }
         }
 
+        @Override
         public String complexType(XSComplexType type) {
-            return "~"+name(type);
+            return "~" + name(type);
         }
 
+        @Override
         public String simpleType(XSSimpleType simpleType) {
-            return "~"+name(simpleType);
+            return "~" + name(simpleType);
         }
 
+        @Override
         public String elementDecl(XSElementDecl decl) {
             return name(decl);
         }
 
         // the rest is doing nothing
+        @Override
         public String annotation(XSAnnotation ann) {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public String attGroupDecl(XSAttGroupDecl decl) {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public String attributeDecl(XSAttributeDecl decl) {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public String attributeUse(XSAttributeUse use) {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public String schema(XSSchema schema) {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public String facet(XSFacet facet) {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public String notation(XSNotation notation) {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public String identityConstraint(XSIdentityConstraint decl) {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public String xpath(XSXPath xpath) {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public String particle(XSParticle particle) {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public String empty(XSContentType empty) {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public String wildcard(XSWildcard wc) {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public String modelGroupDecl(XSModelGroupDecl decl) {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public String modelGroup(XSModelGroup group) {
             throw new UnsupportedOperationException();
         }
@@ -339,9 +368,9 @@ public class PluginImpl extends Plugin {
     
     private final static class PerSchemaOutlineAdaptors {
     	
-    	private final List<OutlineAdaptor> outlineAdaptors = new ArrayList<OutlineAdaptor>();
+    	private final List<OutlineAdaptor> outlineAdaptors = new ArrayList<>();
     	
-    	private final Set<String> packageNames = new HashSet<String>();
+    	private final Set<String> packageNames = new HashSet<>();
 
         private void add(OutlineAdaptor outlineAdaptor) {
             this.outlineAdaptors.add(outlineAdaptor);

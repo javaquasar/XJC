@@ -194,7 +194,7 @@ public final class CElementPropertyInfo extends CPropertyInfo implements Element
     }
 
     public void setAdapter(CAdapter a) {
-        assert adapter==null;
+        assert adapter == null;
         adapter = a;
     }
 

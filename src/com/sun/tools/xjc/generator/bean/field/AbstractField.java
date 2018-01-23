@@ -275,15 +275,17 @@ abstract class AbstractField implements FieldOutline {
 
         String enclosingTypeNS;
 
-        if(parent().target.getTypeName()==null)
+        if(parent().target.getTypeName() == null) {
             enclosingTypeNS = parent()._package().getMostUsedNamespaceURI();
-        else
+        } else {
             enclosingTypeNS = parent().target.getTypeName().getNamespaceURI();
-
+        }
         // generate the name property?
         String generatedName = ctype.getTagName().getLocalPart();
         if(!generatedName.equals(propName)) {
-            if(xew == null) xew = getXew(checkWrapper, field);
+            if(xew == null) {
+                xew = getXew(checkWrapper, field);
+            }
             xew.name(generatedName);
         }
 
@@ -291,14 +293,18 @@ abstract class AbstractField implements FieldOutline {
         String generatedNS = ctype.getTagName().getNamespaceURI();
         if (((formDefault == XmlNsForm.QUALIFIED) && !generatedNS.equals(enclosingTypeNS)) ||
                 ((formDefault == XmlNsForm.UNQUALIFIED) && !generatedNS.equals(""))) {
-            if(xew == null) xew = getXew(checkWrapper, field);
+            if(xew == null) {
+                xew = getXew(checkWrapper, field);
+            }
             xew.namespace(generatedNS);
         }
 
         // generate the required() property?
         CElementPropertyInfo ep = (CElementPropertyInfo) prop;
         if(ep.isRequired() && exposedType.isReference()) {
-            if(xew == null) xew = getXew(checkWrapper, field);
+            if(xew == null) {
+                xew = getXew(checkWrapper, field);
+            }
             xew.required(true);
         }
 
@@ -308,27 +314,33 @@ abstract class AbstractField implements FieldOutline {
         // if the schema definition is requiring this element, we should point to a primitive type,
         // not wrapper type (to correctly carry forward the required semantics.)
         // if it's a collection, we can't use a primitive, however.
-        if(ep.isRequired() && !prop.isCollection())
+        if(ep.isRequired() && !prop.isCollection()) {
             jtype = jtype.unboxify();
-
+        }
         // when generating code for 1.4, the runtime can't infer that ArrayList<Foo> derives
         // from Collection<Foo> (because List isn't parameterized), so always expclitly
         // generate @XmlElement(type=...)
         if( !jtype.equals(exposedType) || (getOptions().runtime14 && prop.isCollection())) {
-            if(xew == null) xew = getXew(checkWrapper, field);
+            if(xew == null) {
+                xew = getXew(checkWrapper, field);
+            }
             xew.type(jtype);
         }
 
         // generate defaultValue property?
         final String defaultValue = ctype.getDefaultValue();
-        if (defaultValue!=null) {
-            if(xew == null) xew = getXew(checkWrapper, field);
+        if (defaultValue != null) {
+            if(xew == null) {
+                xew = getXew(checkWrapper, field);
+            }
             xew.defaultValue(defaultValue);
         }
 
         // generate the nillable property?
         if (ctype.isNillable()) {
-            if(xew == null) xew = getXew(checkWrapper, field);
+            if(xew == null) {
+                xew = getXew(checkWrapper, field);
+            }
             xew.nillable(true);
         }
     }
@@ -346,7 +358,7 @@ abstract class AbstractField implements FieldOutline {
     private XmlElementWriter getXew(boolean checkWrapper, JAnnotatable field) {
         XmlElementWriter xew;
         if(checkWrapper) {
-            if(xesw==null) {
+            if(xesw == null) {
                 xesw = field.annotate2(XmlElementsWriter.class);
             }
             xew = xesw.value();
@@ -428,10 +440,11 @@ abstract class AbstractField implements FieldOutline {
      * Case from {@link #exposedType} to {@link #implType} if necessary.
      */
     protected final JExpression castToImplType( JExpression exp ) {
-        if(implType==exposedType)
+        if(implType == exposedType) {
             return exp;
-        else
+        } else {
             return JExpr.cast(implType,exp);
+        }
     }
 
     /**
@@ -439,55 +452,59 @@ abstract class AbstractField implements FieldOutline {
      * @param aspect
      */
     protected JType getType(final Aspect aspect) {
-        if(prop.getAdapter()!=null)
+        if(prop.getAdapter() != null) {
             return prop.getAdapter().customType.toType(outline.parent(),aspect);
+        }
 
         final class TypeList extends ArrayList<JType> {
-            void add( CTypeInfo t ) {
-                add( t.getType().toType(outline.parent(),aspect) );
+            void add(CTypeInfo t) {
+                add(t.getType().toType(outline.parent(), aspect));
                 if(t instanceof CElementInfo) {
                     // UGLY. element substitution is implemented in a way that
                     // the derived elements are not assignable to base elements.
                     // so when we compute the signature, we have to take derived types
                     // into account
-                    add( ((CElementInfo)t).getSubstitutionMembers());
+                    add(((CElementInfo)t).getSubstitutionMembers());
                 }
             }
 
-            void add( Collection<? extends CTypeInfo> col ) {
-                for (CTypeInfo typeInfo : col)
+            void add(Collection<? extends CTypeInfo> col) {
+                for (CTypeInfo typeInfo : col) {
                     add(typeInfo);
+                }
             }
         }
         TypeList r = new TypeList();
         r.add(prop.ref());
 
         JType t;
-        if(prop.baseType!=null)
+        if(prop.baseType != null) {
             t = prop.baseType;
-        else
-            t = TypeUtil.getCommonBaseType(codeModel,r);
+        } else {
+            t = TypeUtil.getCommonBaseType(codeModel, r);
+        }
 
         // if item type is unboxable, convert t=Integer -> t=int
         // the in-memory data structure can't have primitives directly,
         // but this guarantees that items cannot legal hold null,
         // which helps us improve the boundary signature between our
         // data structure and user code
-        if(prop.isUnboxable())
+        if(prop.isUnboxable()) {
             t = t.unboxify();
+        }
         return t;
     }
 
     /**
      * Returns contents to be added to javadoc.
      */
-    protected final List<Object> listPossibleTypes( CPropertyInfo prop ) {
+    protected final List<Object> listPossibleTypes(CPropertyInfo prop) {
         List<Object> r = new ArrayList<Object>();
-        for( CTypeInfo tt : prop.ref() ) {
+        for(CTypeInfo tt : prop.ref()) {
             JType t = tt.getType().toType(outline.parent(),Aspect.EXPOSED);
-            if( t.isPrimitive() || t.isArray() )
+            if(t.isPrimitive() || t.isArray()) {
                 r.add(t.fullName());
-            else {
+            } else {
                 r.add(t);
                 r.add("\n");
             }
@@ -499,8 +516,8 @@ abstract class AbstractField implements FieldOutline {
     /**
      * return the Java type for the given type reference in the model.
      */
-    private JType resolve(CTypeRef typeRef,Aspect a) {
-        return outline.parent().resolve(typeRef,a);
+    private JType resolve(CTypeRef typeRef, Aspect a) {
+        return outline.parent().resolve(typeRef, a);
     }
 
 }

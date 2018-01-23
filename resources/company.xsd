@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+    targetNamespace="http://www.example.org/company"
+    xmlns="http://www.example.org/company"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified"> 
+ 
+    <xsd:element name="customer">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="address">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="street" type="xsd:string"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+ 
+    <xsd:element name="employee">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="address">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="road" type="xsd:string"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+ 
+</xsd:schema>

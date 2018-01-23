@@ -481,13 +481,15 @@ public class JMethod extends JGenerifiableImpl implements JDeclaration, JAnnotat
     }
 
     /**
+     * @return 
      * @deprecated use {@link #mods()} 
      */
     public JMods getMods() {
-		return mods;
-	}
+        return mods;
+    }
 
-	protected JCodeModel owner() {
-		return outer.owner();
-	}
+    @Override
+    protected JCodeModel owner() {
+        return outer.owner();
+    }
 }

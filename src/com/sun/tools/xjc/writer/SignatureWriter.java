@@ -102,24 +102,25 @@ public class SignatureWriter {
     }
     
     private void dump() throws IOException {
-        
         // collect packages used in the class.
         Set<JPackage> packages = new TreeSet<JPackage>(new Comparator<JPackage>() {
             public int compare(JPackage lhs, JPackage rhs) {
                 return lhs.name().compareTo(rhs.name());
             }
         });
-        for( ClassOutline ci : classes )
+        for(ClassOutline ci : classes) {
             packages.add(ci._package()._package());
+        }
 
-        for( JPackage pkg : packages )
-            dump( pkg );
+        for(JPackage pkg : packages) {
+            dump(pkg);
+        } 
         
         out.flush();
     }
     
-    private void dump( JPackage pkg ) throws IOException {
-        println("package "+pkg.name()+" {");
+    private void dump(JPackage pkg) throws IOException {
+        println("package " + pkg.name() + " {");
         indent++;
         dumpChildren(pkg);
         indent--;
@@ -131,8 +132,9 @@ public class SignatureWriter {
         while(itr.hasNext()) {
             JDefinedClass cls = (JDefinedClass)itr.next();
             ClassOutline ci = classSet.get(cls);
-            if(ci!=null)
+            if(ci != null) {
                 dump(ci);
+            }
         }
     }
     
@@ -173,8 +175,9 @@ public class SignatureWriter {
     /** Get the display name of a type. */
     private String printName( JType t ) {
         String name = t.fullName();
-        if(name.startsWith("java.lang."))
+        if(name.startsWith("java.lang.")) {
             name = name.substring(10);  // chop off the package name
+        }
         return name;
     }
 }

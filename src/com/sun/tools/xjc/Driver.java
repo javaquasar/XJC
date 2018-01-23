@@ -318,7 +318,7 @@ public class Driver {
 
             if(opt.mode == Mode.FOREST) {
                 // dump DOM forest and quit
-                ModelLoader loader  = new ModelLoader( opt, new JCodeModel(), receiver );
+                ModelLoader loader  = new ModelLoader(opt, new JCodeModel(), receiver);
                 try {
                     DOMForest forest = loader.buildDOMForest(new XMLSchemaInternalizationLogic());
                     forest.dump(System.out);
@@ -355,7 +355,7 @@ public class Driver {
                 return -1;
             }
             
-            Model model = ModelLoader.load( opt, new JCodeModel(), receiver );
+            Model model = ModelLoader.load(opt, new JCodeModel(), receiver);
 
             if (model == null) {
                 listener.message(Messages.format(Messages.PARSE_FAILED));

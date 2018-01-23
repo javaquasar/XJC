@@ -59,23 +59,27 @@ import org.xml.sax.ErrorHandler;
  */
 public class SynchronizedMethodAddOn extends Plugin {
 
+    @Override
     public String getOptionName() {
         return "Xsync-methods";
     }
 
+    @Override
     public String getUsage() {
         return "  -Xsync-methods     :  generate accessor methods with the 'synchronized' keyword";
     }
 
+    @Override
     public int parseArgument(Options opt, String[] args, int i) throws BadCommandLineException, IOException {
         return 0;   // no option recognized
     }
 
+    @Override
     public boolean run( Outline model, Options opt, ErrorHandler errorHandler ) {
 
-        for( ClassOutline co : model.getClasses() )
+        for(ClassOutline co : model.getClasses()) {
             augument(co);
-        
+        }
         return true;
     }
     
@@ -83,8 +87,9 @@ public class SynchronizedMethodAddOn extends Plugin {
      * Adds "synchoronized" to all the methods.
      */
     private void augument(ClassOutline co) {
-        for (JMethod m : co.implClass.methods())
-            m.getMods().setSynchronized(true);
+        for (JMethod m : co.implClass.methods()) {
+            m.mods().setSynchronized(true);
+        }
     }
 
 }

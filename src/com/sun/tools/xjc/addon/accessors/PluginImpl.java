@@ -64,10 +64,12 @@ import org.xml.sax.ErrorHandler;
  */
 public class PluginImpl extends Plugin {
 
+    @Override
     public String getOptionName() {
         return "Xpropertyaccessors";
     }
 
+    @Override
     public String getUsage() {
         return "  -Xpropertyaccessors :  Use XmlAccessType PROPERTY instead of FIELD for generated classes";
     }
@@ -77,6 +79,7 @@ public class PluginImpl extends Plugin {
         return 0;   // no option recognized
     }
 
+    @Override
     public boolean run( Outline model, Options opt, ErrorHandler errorHandler ) {
 
         for( ClassOutline co : model.getClasses() ) {

@@ -148,7 +148,7 @@ public final class ModelLoader {
                         new InputSource(
                             new StringReader(
                                 "<?xml version='1.0'?><xml-java-binding-schema><options package='"
-                                    + (opt.defaultPackage==null?"generated":opt.defaultPackage)
+                                    + (opt.defaultPackage == null ? "generated" : opt.defaultPackage)
                                     + "'/></xml-java-binding-schema>"));
                 }
 
@@ -362,7 +362,7 @@ public final class ModelLoader {
             return null;
         }
 
-        if(opt.getBindFiles().length==0) {
+        if(opt.getBindFiles().length == 0) {
             // no external binding. try the speculative no DOMForest execution,
             // which is faster if the speculation succeeds.
             try {
@@ -374,7 +374,7 @@ public final class ModelLoader {
 
         // the default slower way is to parse everything into DOM first.
         // so that we can take external annotations into account.
-        DOMForest forest = buildDOMForest( new XMLSchemaInternalizationLogic() );
+        DOMForest forest = buildDOMForest(new XMLSchemaInternalizationLogic());
         return createXSOM(forest, scdBasedBindingSet);
     }
 
@@ -537,8 +537,9 @@ public final class ModelLoader {
 
         XSSchemaSet result = reader.getResult();
 
-        if(result!=null)
-            scdBasedBindingSet.apply(result,errorReceiver);
+        if(result != null) {
+            scdBasedBindingSet.apply(result, errorReceiver);
+        }
 
         return result;
     }

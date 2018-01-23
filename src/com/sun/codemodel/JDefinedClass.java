@@ -263,15 +263,19 @@ public class JDefinedClass
      * @return This class
      */
     public JDefinedClass _extends(JClass superClass) {
-        if (this.classType==ClassType.INTERFACE)
-        	if(superClass.isInterface()){
-        		return this._implements(superClass);
-        	} else throw new IllegalArgumentException("unable to set the super class for an interface");
-        if (superClass == null)
+        if (this.classType == ClassType.INTERFACE) {
+            if (superClass.isInterface()) {
+                return this._implements(superClass);
+            } else {
+                throw new IllegalArgumentException("unable to set the super class for an interface");
+            }
+        }
+        if (superClass == null) {
             throw new NullPointerException();
+        }
         
-        for( JClass o=superClass.outer(); o!=null; o=o.outer() ){
-            if(this==o){
+        for(JClass o = superClass.outer(); o != null; o = o.outer()){
+            if(this == o){
                 throw new IllegalArgumentException("Illegal class inheritance loop." +
                 "  Outer class " + this.name + " may not subclass from inner class: " + o.name());
             }

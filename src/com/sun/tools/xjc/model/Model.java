@@ -40,6 +40,7 @@
 
 package com.sun.tools.xjc.model;
 
+import plugin.SaxPlagin;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JPackage;
@@ -78,7 +79,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import a.*;
 /**
  * Root of the object model that represents the code that needs to be generated.
  *
@@ -292,9 +292,6 @@ public final class Model implements TypeInfoSet<NType,NClass,Void,Void>, CCustom
             for(Plugin ma : opt.activePlugins) {
                 ma.run(o, opt, ehf);
             }
-             
-            MainPlagin mainPlagin = new MainPlagin();
-            mainPlagin.run(o, opt, ehf);
         } catch (SAXException e) {
             // fatal error. error should have been reported
             return null;

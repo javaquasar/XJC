@@ -1565,18 +1565,7 @@
 					<xs:element minOccurs="0" maxOccurs="unbounded" name="CardEvent">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Card">
-									<xs:complexType>
-										<xs:attribute name="PAN" type="xs:unsignedLong" use="required"/>
-										<xs:attribute name = "productid" use = "optional">
-											<xs:simpleType>
-												<xs:restriction base = "xs:string">
-													<xs:maxLength value = "4"/>
-												</xs:restriction>
-											</xs:simpleType>
-										</xs:attribute>
-									</xs:complexType>
-								</xs:element>
+								<xs:element name="Card" type="Card" minOccurs="1" maxOccurs="1" nillable="false"/>
 								<xs:element name="Event">
 									<xs:complexType>
 										<xs:attribute name="Type" type="EventType" use="required"/>

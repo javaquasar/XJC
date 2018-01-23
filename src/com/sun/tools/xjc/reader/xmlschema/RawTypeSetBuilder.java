@@ -329,7 +329,7 @@ public class RawTypeSetBuilder implements XSTermVisitor {
         }
 
         protected CTypeRef toTypeRef(CElementPropertyInfo ep) {
-            if(ep!=null && target.getAdapterUse()!=null)
+            if(ep != null && target.getAdapterUse() != null)
                 ep.setAdapter(target.getAdapterUse());
             return new CTypeRef(target.getInfo(),decl);
         }

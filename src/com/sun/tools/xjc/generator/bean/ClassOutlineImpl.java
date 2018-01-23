@@ -53,29 +53,30 @@ import com.sun.tools.xjc.outline.ClassOutline;
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public final class ClassOutlineImpl extends ClassOutline {
-    private final BeanGenerator _parent;
+    private final BeanGenerator parent;
 
 
     public MethodWriter createMethodWriter() {
-        return _parent.getModel().strategy.createMethodWriter(this);
+        return parent.getModel().strategy.createMethodWriter(this);
     }
     
     /**
      * Gets {@link #_package} as {@link PackageOutlineImpl},
      * since it's guaranteed to be of that type.
      */
+    @Override
     public PackageOutlineImpl _package() {
         return (PackageOutlineImpl)super._package();
     }
 
-    ClassOutlineImpl( BeanGenerator _parent,
-        CClassInfo _target, JDefinedClass exposedClass, JDefinedClass _implClass, JClass _implRef ) {
-        super(_target,exposedClass,_implRef,_implClass);
-        this._parent = _parent;
+    ClassOutlineImpl(BeanGenerator parent, CClassInfo target, JDefinedClass exposedClass, JDefinedClass implClass, JClass implRef) {
+        super(target, exposedClass, implRef, implClass);
+        this.parent = parent;
         _package().classes.add(this);
     }
 
+    @Override
     public BeanGenerator parent() {
-        return _parent;
+        return parent;
     }
 }

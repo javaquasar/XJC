@@ -215,7 +215,7 @@ public abstract class CPropertyInfo implements PropertyInfo<NType,NClass>, CCust
      *      of annotation defaulting as much as possible)
      */
     public String getName(boolean isPublic) {
-        return isPublic?publicName:privateName;
+        return isPublic ? publicName : privateName;
     }
 
     /**
@@ -233,7 +233,7 @@ public abstract class CPropertyInfo implements PropertyInfo<NType,NClass>, CCust
     }
 
     public String displayName() {
-        return parent.toString()+'#'+getName(false);
+        return parent.toString() + '#' + getName(false);
     }
 
     public boolean isCollection() {

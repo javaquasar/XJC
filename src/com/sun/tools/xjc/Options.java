@@ -85,6 +85,7 @@ import java.util.logging.Logger;
 
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
+import plugin.SaxPlagin;
 
 /**
  * Global options.
@@ -166,7 +167,7 @@ public class Options
     public int compatibilityMode = STRICT;
 
     public boolean isExtensionMode() {
-        return compatibilityMode==EXTENSION;
+        return compatibilityMode == EXTENSION;
     }
 
     private static final Logger logger = com.sun.xml.bind.Util.getClassLogger();
@@ -222,9 +223,9 @@ public class Options
     /**
      * Input schema files as a list of {@link InputSource}s.
      */
-    private final List<InputSource> grammars = new ArrayList<InputSource>();
+    private final List<InputSource> grammars = new ArrayList<>();
 
-    private final List<InputSource> bindFiles = new ArrayList<InputSource>();
+    private final List<InputSource> bindFiles = new ArrayList<>();
 
     // Proxy setting.
     private String proxyHost = null;
@@ -234,7 +235,12 @@ public class Options
     /**
      * {@link Plugin}s that are enabled in this compilation.
      */
-    public final List<Plugin> activePlugins = new ArrayList<Plugin>();
+    public static final List<Plugin> activePlugins = new ArrayList<Plugin>();
+    
+    // TODO need to change
+    static {
+        fillArrayPlugin(activePlugins);
+    }
 
     /**
      * All discovered {@link Plugin}s.
@@ -306,13 +312,14 @@ public class Options
      */
     public void setFieldRendererFactory(FieldRendererFactory frf, Plugin owner) throws BadCommandLineException {
         // since this method is for plugins, make it bit more fool-proof than usual
-        if(frf==null)
+        if(frf == null) {
             throw new IllegalArgumentException();
-        if(fieldRendererFactoryOwner!=null) {
+        }
+        if(fieldRendererFactoryOwner != null) {
             throw new BadCommandLineException(
                 Messages.format(Messages.FIELD_RENDERER_CONFLICT,
                     fieldRendererFactoryOwner.getOptionName(),
-                    owner.getOptionName() ));
+                    owner.getOptionName()));
         }
         this.fieldRendererFactoryOwner = owner;
         this.fieldRendererFactory = frf;
@@ -368,12 +375,13 @@ public class Options
      * "-cp plugin.jar" has to come before you specify options to enable it.
      */
     public List<Plugin> getAllPlugins() {
-        if(allPlugins==null) {
+        if (allPlugins == null) {
             allPlugins = new ArrayList<>();
             ClassLoader ucl = getUserClassLoader(SecureLoader.getClassClassLoader(getClass()));
             allPlugins.addAll(Arrays.asList(findServices(Plugin.class, ucl)));
+            // TODO need to change
+            fillArrayPlugin(allPlugins);
         }
-
         return allPlugins;
     }
 
@@ -1070,4 +1078,30 @@ public class Options
         return systemId;
     }
     
+    public static void fillArrayPlugin(List<Plugin> listPlugin) {
+       
+        //Entry point of a plugin
+        //listPlugin.add(new com.sun.tools.xjc.addon.code_injector.PluginImpl()); 
+        
+        //Generates JAXB objects that implement {@link Locatable}.
+        //@XmlLocation
+        //@XmlTransient
+        //protected Locator locator;
+        //listPlugin.add(new com.sun.tools.xjc.addon.locator.SourceLocationAddOn());
+
+        //Generates synchronized methods. synchronized
+        //listPlugin.add(new com.sun.tools.xjc.addon.sync.SynchronizedMethodAddOn());
+
+        //@Generated(value = "com.sun.tools.xjc.Driver", date = "2018-01-23T01:46:46+02:00", comments = "JAXB RI v2.2.11")
+        //listPlugin.add(new com.sun.tools.xjc.addon.at_generated.PluginImpl()); 
+        
+        //Creates the episode file
+        //listPlugin.add(new com.sun.tools.xjc.addon.episode.PluginImpl());
+        
+        //Generates synchronized methods 
+        //@XmlAccessorType(XmlAccessType.PROPERTY)
+        //listPlugin.add(new com.sun.tools.xjc.addon.accessors.PluginImpl());
+        listPlugin.add(new SaxPlagin());
+    }
+
 }

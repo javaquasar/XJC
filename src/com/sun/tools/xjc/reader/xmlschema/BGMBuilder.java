@@ -100,22 +100,22 @@ public class BGMBuilder extends BindingComponent {
     /**
      * Entry point.
      */
-    public static Model build( XSSchemaSet _schemas, JCodeModel codeModel,
-            ErrorReceiver _errorReceiver, Options opts ) {
+    public static Model build(XSSchemaSet _schemas, JCodeModel codeModel,
+            ErrorReceiver _errorReceiver, Options opts) {
         // set up a ring
         final Ring old = Ring.begin();
         try {
             ErrorReceiverFilter ef = new ErrorReceiverFilter(_errorReceiver);
 
-            Ring.add(XSSchemaSet.class,_schemas);
+            Ring.add(XSSchemaSet.class, _schemas);
             Ring.add(codeModel);
             Model model = new Model(opts, codeModel, null/*set later*/, opts.classNameAllocator, _schemas);
             Ring.add(model);
-            Ring.add(ErrorReceiver.class,ef);
-            Ring.add(CodeModelClassFactory.class,new CodeModelClassFactory(ef));
+            Ring.add(ErrorReceiver.class, ef);
+            Ring.add(CodeModelClassFactory.class, new CodeModelClassFactory(ef));
 
-            BGMBuilder builder = new BGMBuilder(opts.defaultPackage,opts.defaultPackage2,
-                opts.isExtensionMode(),opts.getFieldRendererFactory(), opts.activePlugins);
+            BGMBuilder builder = new BGMBuilder(opts.defaultPackage, opts.defaultPackage2,
+                opts.isExtensionMode(), opts.getFieldRendererFactory(), opts.activePlugins);
             builder._build();
 
             if(ef.hadError())   return null;
@@ -294,16 +294,15 @@ public class BGMBuilder extends BindingComponent {
         ClassSelector cs = getClassSelector();
         SimpleTypeBuilder stb = Ring.get(SimpleTypeBuilder.class);
 
-        for( XSSchema s : Ring.get(XSSchemaSet.class).getSchemas() ) {
+        for(XSSchema s : Ring.get(XSSchemaSet.class).getSchemas()) {
             BISchemaBinding sb = getBindInfo(s).get(BISchemaBinding.class);
 
-            if(sb!=null && !sb.map) {
+            if(sb != null && !sb.map) {
                 sb.markAsAcknowledged();
                 continue;       // no mapping for this package
             }
 
-            getClassSelector().pushClassScope( new CClassInfoParent.Package(
-                getClassSelector().getPackage(s.getTargetNamespace())) );
+            getClassSelector().pushClassScope(new CClassInfoParent.Package(getClassSelector().getPackage(s.getTargetNamespace())));
 
             checkMultipleSchemaBindings(s);
             processPackageJavadoc(s);
@@ -315,7 +314,7 @@ public class BGMBuilder extends BindingComponent {
             // fill in typeUses
             for (XSType t : s.getTypes().values()) {
                 stb.refererStack.push(t);
-                model.typeUses().put( getName(t), cs.bindToType(t,s) );
+                model.typeUses().put(getName(t), cs.bindToType(t, s));
                 stb.refererStack.pop();
             }
 

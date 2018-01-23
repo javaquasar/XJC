@@ -63,24 +63,29 @@ import org.xml.sax.ErrorHandler;
  */
 public class PluginImpl extends Plugin {
 
+    @Override
     public String getOptionName() {
         return "mark-generated";
     }
 
+    @Override
     public String getUsage() {
         return "  -mark-generated    :  mark the generated code as @javax.annotation.Generated";
     }
 
     private JClass annotation;
 
+    @Override
     public boolean run( Outline model, Options opt, ErrorHandler errorHandler ) {
         // we want this to work without requiring JSR-250 jar.
         annotation = model.getCodeModel().ref("javax.annotation.Generated");
 
-        for( ClassOutline co : model.getClasses() )
+        for(ClassOutline co : model.getClasses()) {
             augument(co);
-        for( EnumOutline eo : model.getEnums() )
+        }
+        for(EnumOutline eo : model.getEnums()) {
             augument(eo);
+        }
 
         //TODO: process generated ObjectFactory classes?
 
@@ -96,15 +101,17 @@ public class PluginImpl extends Plugin {
      */
     private void augument(ClassOutline co) {
         annotate(co.implClass);
-        for (JMethod m : co.implClass.methods())
+        for (JMethod m : co.implClass.methods()) {
             annotate(m);
-        for (JFieldVar f : co.implClass.fields().values())
+        }
+        for (JFieldVar f : co.implClass.fields().values()) {
             annotate(f);
+        }
     }
 
     private void annotate(JAnnotatable m) {
         m.annotate(annotation)
-                .param("value",Driver.class.getName())
+                .param("value", Driver.class.getName())
                 .param("date", getISO8601Date())
                 .param("comments", "JAXB RI v" + Options.getBuildID());
     }
@@ -117,12 +124,12 @@ public class PluginImpl extends Plugin {
      * @return the date value
      */
     private String getISO8601Date() {
-        if(date==null) {
-            StringBuffer tstamp = new StringBuffer();
+        if(date == null) {
+            StringBuilder tstamp = new StringBuilder();
             tstamp.append((new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ")).format(new Date()));
             // hack to get ISO 8601 style timezone - is there a better way that doesn't require
             // a bunch of timezone offset calculations?
-            tstamp.insert(tstamp.length()-2, ':');
+            tstamp.insert(tstamp.length() - 2, ':');
             date = tstamp.toString();
         }
         return date;

@@ -1,0 +1,11 @@
+<jaxb:bindings
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    version="2.1">
+    <jaxb:globalBindings localScoping="toplevel"/>
+    <jaxb:bindings schemaLocation="company.xsd">
+        <jaxb:bindings node="//xsd:element[@name='employee']/xsd:complexType/xsd:sequence/xsd:element[@name='address']/xsd:complexType">
+            <jaxb:class name="EmployeeAddress"/>
+        </jaxb:bindings>
+    </jaxb:bindings>
+</jaxb:bindings>

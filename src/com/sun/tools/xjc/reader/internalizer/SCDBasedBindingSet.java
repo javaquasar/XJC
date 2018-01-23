@@ -155,21 +155,22 @@ public final class SCDBasedBindingSet {
                     return;
                 }
 
-                reportError( src, Messages.format(Messages.ERR_SCD_EVALUATED_EMPTY,scd) );
+                reportError(src, Messages.format(Messages.ERR_SCD_EVALUATED_EMPTY, scd));
                 return;
             }
 
-            if(firstChild!=null)
-                    firstChild.applyAll(childNodes);
+            if(firstChild != null) {
+                firstChild.applyAll(childNodes);
+            }
 
             if(!bindings.isEmpty()) {
                 // error to match more than one components
                 Iterator<XSComponent> itr = childNodes.iterator();
                 XSComponent target = itr.next();
                 if(itr.hasNext()) {
-                    reportError( src, Messages.format(Messages.ERR_SCD_MATCHED_MULTIPLE_NODES,scd,childNodes.size()) );
-                    errorReceiver.error( target.getLocator(), Messages.format(Messages.ERR_SCD_MATCHED_MULTIPLE_NODES_FIRST) );
-                    errorReceiver.error( itr.next().getLocator(), Messages.format(Messages.ERR_SCD_MATCHED_MULTIPLE_NODES_SECOND) );
+                    reportError(src, Messages.format(Messages.ERR_SCD_MATCHED_MULTIPLE_NODES, scd, childNodes.size()));
+                    errorReceiver.error(target.getLocator(), Messages.format(Messages.ERR_SCD_MATCHED_MULTIPLE_NODES_FIRST));
+                    errorReceiver.error(itr.next().getLocator(), Messages.format(Messages.ERR_SCD_MATCHED_MULTIPLE_NODES_SECOND));
                 }
 
                 // apply bindings to the target
@@ -177,8 +178,9 @@ public final class SCDBasedBindingSet {
                     for (Element item : DOMUtils.getChildElements(binding)) {
                         String localName = item.getLocalName();
 
-                        if ("bindings".equals(localName))
+                        if ("bindings".equals(localName)) {
                             continue;   // this should be already in Target.bindings of some SpecVersion.
+                        }
 
                         try {
                             new DOMForestScanner(forest).scan(item,loader);
@@ -187,7 +189,7 @@ public final class SCDBasedBindingSet {
                             // add this binding to the target
                             XSAnnotation ann = target.getAnnotation(true);
                             BindInfo bi = (BindInfo)ann.getAnnotation();
-                            if(bi==null) {
+                            if(bi == null) {
                                 bi = new BindInfo();
                                 ann.setAnnotation(bi);
                             }
