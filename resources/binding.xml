@@ -1,0 +1,11 @@
+<jaxb:bindings
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    version="2.1">
+    <jaxb:globalBindings localScoping="toplevel"/>
+    <jaxb:bindings schemaLocation="./GPS.xsd">
+        <jaxb:bindings node="//xs:element[@name='Transactions'/xs:complexType/xs:sequence/xs:choice/xs:element[@name='CardAuthorisation']/xs:complexType>">
+            <jaxb:class name="CardAuthorisation"/>
+        </jaxb:bindings>
+    </jaxb:bindings>
+</jaxb:bindings>
