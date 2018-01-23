@@ -58,7 +58,7 @@ public class XJCFacade {
     private static final String JDK6_REQUIRED = "XJC requires JDK 6.0 or later. Please download it from http://www.oracle.com/technetwork/java/javase/downloads";
 
     public static void main(String[] args) throws Throwable {
-        String[] b = {"-d", "./src", "-p", "test.gps", "./resources/GPS.xsd"};
+        String[] b = {"-d", "./src", "-p", "test.gps", "./resources/GPS.xsd", "-debug"};
         args = b;
         String v = "2.0";      // by default, we go 2.0
 

@@ -16,6 +16,7 @@ import com.sun.codemodel.JVar;
 import com.sun.tools.xjc.BadCommandLineException;
 import com.sun.tools.xjc.Options;
 import com.sun.tools.xjc.Plugin;
+import com.sun.tools.xjc.model.Model;
 import com.sun.tools.xjc.outline.ClassOutline;
 import com.sun.tools.xjc.outline.Outline;
 import java.util.Map;
@@ -33,7 +34,7 @@ public class MainPlagin extends Plugin {
 
 	@Override
 	public String getOptionName() {
-		return "Xexample-plugin";
+		return "Main-plugin";
 	}
 
 	@Override
@@ -46,6 +47,11 @@ public class MainPlagin extends Plugin {
 	public String getUsage() {
 		return "  -Xexample-plugin    :  xjc example plugin";
 	}
+        
+        @Override
+        public void postProcessModel(Model model, ErrorHandler errorHandler) {
+        // noop
+        }
 
 	@Override
 	public boolean run(Outline model, Options opt, ErrorHandler errorHandler)

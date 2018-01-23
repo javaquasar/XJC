@@ -182,8 +182,9 @@ public class BGMBuilder extends BindingComponent {
 
         Ring.get(ModelChecker.class).check();
 
-        for( Plugin ma : activePlugins )
+        for(Plugin ma : activePlugins) {
             ma.postProcessModel(model, Ring.get(ErrorReceiver.class));
+        }
 
     }
 

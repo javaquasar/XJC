@@ -685,9 +685,9 @@ public class Options
         }
 
         // see if this is one of the extensions
-        for( Plugin plugin : getAllPlugins() ) {
+        for(Plugin plugin : getAllPlugins()) {
             try {
-                if( ('-'+plugin.getOptionName()).equals(args[i]) ) {
+                if(('-' + plugin.getOptionName()).equals(args[i])) {
                     activePlugins.add(plugin);
                     plugin.onActivated(this);
                     pluginURIs.addAll(plugin.getCustomizationURIs());
@@ -696,11 +696,12 @@ public class Options
                     // this is new in 2.1, and due to the backward compatibility reason,
                     // if plugin didn't understand it, we still return 1 to indicate
                     // that this option is consumed.
-                    int r = plugin.parseArgument(this,args,i);
-                    if(r!=0)
+                    int r = plugin.parseArgument(this, args, i);
+                    if(r!=0) {
                         return r;
-                    else
+                    } else {
                         return 1;
+                    }
                 }
 
                 int r = plugin.parseArgument(this,args,i);
